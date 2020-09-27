@@ -1,4 +1,5 @@
-const $btn = document.getElementById('btn-kick');
+const $btnKick = document.getElementById('btn-kick');
+const $btnSuperKick = document.getElementById('btn-super-kick');
 
 const character = {
     name: 'Pikachu',
@@ -17,16 +18,18 @@ const enemy = {
 }
 
 function init() {
-    console.log('Start Game');
     renderHP(character);
     renderHP(enemy);
 }
 
-$btn.addEventListener('click', function () {
-    console.log('kick');
+$btnKick.addEventListener('click', function () {
     changeHP(random(20), character);
     changeHP(random(20), enemy);
-})
+});
+
+$btnSuperKick.addEventListener('click', function () {
+    changeHP(random(50), enemy);
+});
 
 function changeHP(damage, person) {
     person.damageHP -= damage;
@@ -35,7 +38,8 @@ function changeHP(damage, person) {
     }
     renderHP(person);
     if(0 === person.damageHP){
-        $btn.disabled = true;
+        $btnKick.disabled = true;
+        $btnSuperKick.disabled = true;
         alert(person.name + ' lose');
     }
 }
