@@ -1,8 +1,7 @@
-const $btnKick = document.getElementById('btn-kick');
-const $btnSuperKick = document.getElementById('btn-super-kick');
-const $btnStartGame = document.getElementById('btn-start-game');
 const $logBoard = document.getElementById('battle-log');
+const $actionsHolder = document.getElementById('battle-actions');
 
+// pakemons
 const pakemonBehaviors = {
     render: function () {
         const {damageHP, defaultHP} = this;
@@ -47,6 +46,69 @@ const enemy = {
     ...pakemonBehaviors,
 }
 
+//actions
+const kickCounter = function (amount) {
+    return {
+        getAmount: () => amount,
+        allowKick: () => amount > 0,
+        kick: () => --amount,
+    }
+}
+
+const createActions = () => [
+    {
+        name: 'Дать леща',
+        damageMax: 30,
+        damageMin: 0,
+        counter: kickCounter(10),
+    },
+    {
+        name: 'Прописать пендаль',
+        damageMax: 50,
+        damageMin: 10,
+        counter: kickCounter(3),
+    },
+    {
+        name: 'Ушатать с вертушки',
+        damageMax: 100,
+        damageMin: 50,
+        counter: kickCounter(2),
+    },
+    {
+        name: 'Тыкнуть  пальцем',
+        damageMax: 10,
+        damageMin: 0,
+    },
+];
+
+function initActions() {
+    $actionsHolder.innerHTML = '';
+    createActions().forEach(({name, counter, damageMin, damageMax}) => {
+        const $button = document.createElement('button');
+        $button.className = 'button';
+        const renderButton = () => $button.innerText = name + (counter ? ` (${counter.getAmount()})` : '');
+        renderButton();
+        $button.addEventListener('click', () => {
+            enemy.makeDamage(random(damageMin, damageMax), character);
+            /**
+             * Отсутствие counter - означает бесконечные удары
+             */
+            if (undefined !== counter) {
+                counter.kick();
+                renderButton();
+                if (!counter.allowKick()) {
+                    $button.disabled = true;
+                    $button.removeEventListener('click', this);
+                }
+            }
+            checkEndGameCondition();
+            enemyTurn();
+        });
+
+        $actionsHolder.appendChild($button);
+    });
+}
+
 const battleLog = {
     clear: () => $logBoard.innerHTML = '',
     addMsg: (msg) => {
@@ -57,13 +119,18 @@ const battleLog = {
 }
 
 function startGame() {
-    $btnStartGame.style.display = 'none';
-    $btnKick.style.display = 'block';
-    $btnSuperKick.style.display = 'block';
+    initActions();
     character.reset();
     enemy.reset();
     battleLog.clear();
     battleLog.addMsg(logDecor`Начинается бой между ${character.name} и ${enemy.name}`);
+}
+
+function enemyTurn() {
+    if(!enemy.isDead()) {
+        character.makeDamage(random(0, 40), enemy);
+        checkEndGameCondition();
+    }
 }
 
 function checkEndGameCondition() {
@@ -73,36 +140,24 @@ function checkEndGameCondition() {
     if (character.isDead()) {
         battleLog.addMsg(logDecor`Эхх, ваш ${characterName} погиб смертью храбрых от грязных рук ${enemyName}`);
         battleLog.addMsg('<strong style="color:red">Вы проиграли :((</strong>');
-        endGame();
+        newGame();
         return;
     }
     if (enemy.isDead()) {
         battleLog.addMsg(logDecor`Ураа, ваш храбрый ${characterName} победил неудачного ${enemyName}`);
         battleLog.addMsg('<h3 style="color:goldenrod">Эпическая победа!!!</h3>');
-        endGame();
+        newGame();
     }
 }
 
-function endGame() {
-    $btnKick.style.display = 'none';
-    $btnSuperKick.style.display = 'none';
-    $btnStartGame.style.display = 'block';
+function newGame() {
+    $actionsHolder.innerHTML = '';
+    const $button = document.createElement('button');
+    $button.className = 'button';
+    $button.innerText = 'Начать эпическую битву';
+    $button.addEventListener('click', startGame);
+    $actionsHolder.appendChild($button);
 }
-
-$btnKick.addEventListener('click', function () {
-    character.makeDamage(random(20), enemy);
-    enemy.makeDamage(random(20), character);
-    checkEndGameCondition();
-});
-
-$btnSuperKick.addEventListener('click', function () {
-    enemy.makeDamage(random(50), character);
-    checkEndGameCondition();
-});
-
-$btnStartGame.addEventListener('click', function () {
-    startGame();
-});
 
 function logDecor(templateData, ...keys) {
     let str = templateData[0];
@@ -125,7 +180,7 @@ function generateBattlePhrase({name: first}, {name: second}) {
         () => logDecor`${first} расстроился, как вдруг, неожиданно ${second} случайно влепил стопой в живот соперника.`,
         () => logDecor`${first} пытался что-то сказать, но вдруг, неожиданно ${second} со скуки, разбил бровь сопернику.`
     ];
-    return phrases[random(phrases.length) - 1]();
+    return phrases[random(0, phrases.length)]();
 }
 
 function generateDamageInfo(amount, {name, damageHP: hpLeft, defaultHP: hpTotal}) {
@@ -133,8 +188,8 @@ function generateDamageInfo(amount, {name, damageHP: hpLeft, defaultHP: hpTotal}
         + `<br/>У ${name} осталось здоровья <span style="color:green">${hpLeft} из ${hpTotal}</span>`;
 }
 
-function random(max) {
-    return Math.ceil(Math.random() * max);
+function random(min, max) {
+    return min + Math.floor(Math.random() * (max - min));
 }
 
-endGame();
+newGame();
