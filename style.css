@@ -42,6 +42,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .playground {
@@ -298,12 +299,11 @@ body {
     background: white;
     border: 2px solid #ffc55b;
     border-radius: 10px;
-    min-height: 30px;
     vertical-align: middle;
-    padding: 12px 20px;
+    padding: 12px;
     outline: none !important;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     margin: 5px;
 }
 
