@@ -47,13 +47,12 @@ const enemy = {
 }
 
 //actions
-const kickCounter = function (amount) {
-    return {
-        getAmount: () => amount,
-        allowKick: () => amount > 0,
-        kick: () => --amount,
-    }
-}
+const kickCounter = (amount) => ({
+    getAmount: () => amount,
+    allowKick: () => amount > 0,
+    kick: () => --amount,
+});
+
 
 const createActions = () => [
     {
@@ -127,7 +126,7 @@ function startGame() {
 }
 
 function enemyTurn() {
-    if(!enemy.isDead()) {
+    if (!enemy.isDead()) {
         character.makeDamage(random(0, 40), enemy);
         checkEndGameCondition();
     }
