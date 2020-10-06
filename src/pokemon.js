@@ -1,10 +1,11 @@
 export class Pokemon {
 
-    constructor({name, hp, image, level}) {
+    constructor({name, hp, image, level, playerActions}) {
         this.name = name;
         this.hp = this.defaultHp = hp;
         this.image = image;
         this.level = level;
+        this.playerActions = playerActions;
     }
 
     isDead() {
