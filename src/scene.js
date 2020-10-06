@@ -1,4 +1,4 @@
-import {buttonDefault, messageBig} from './widgets.js';
+import {buttonDefault, buttonSelectPokemon, messageBig} from './widgets.js';
 
 const $logBoard = document.getElementById('battle-log');
 const $actionsHolder = document.getElementById('battle-actions');
@@ -77,6 +77,13 @@ export default {
         $actionsHolder.appendChild(messageBig('<strong style="color:#fdf200">Эпическая победа!!!</strong>'));
         $actionsHolder.appendChild(buttonDefault('ОК', newGameCallback));
     },
+    showPokemonSelect: (pokemons, startGameCallback) => {
+        $actionsHolder.appendChild(messageBig('<strong style="color:#ffc650;">Выбери своего покемона</strong>'));
+        pokemons.forEach((pokemon) => {
+            const $btn = buttonSelectPokemon(pokemon, () => startGameCallback(pokemon));
+            $actionsHolder.appendChild($btn);
+        });
+    }
 };
 
 const characterHtml = ({name, level, hp, defaultHp, image}) => `

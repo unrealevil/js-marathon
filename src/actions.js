@@ -38,3 +38,30 @@ export const pikachuActions = () => [
         hpMin: 50,
     }),
 ];
+
+export const charmanderActions = () => [
+    new DamageAction({
+        name: 'Подставить подножку',
+        amount: 10,
+        damageMax: 30,
+        damageMin: 0,
+    }),
+    new DamageAction({
+        name: 'Дать щелбан',
+        amount: null, //бесконечно
+        damageMax: 10,
+        damageMin: 0,
+    }),
+    new DamageAction({
+        name: 'Пульнуть из рогатки',
+        amount: 3,
+        damageMax: 100,
+        damageMin: 0,
+    }),
+    new HealthAction({
+        name: 'Утереть сопли',
+        amount: 4,
+        hpMax: 100,
+        hpMin: 0,
+    }),
+];

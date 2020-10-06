@@ -1,5 +1,4 @@
 import scene from "./scene.js";
-import {pikachuActions} from "./actions.js";
 import {charmander, pikachu} from "./pokemons.js";
 import {random} from "./utils.js";
 import log from "./battle-log.js";
@@ -7,17 +6,17 @@ import log from "./battle-log.js";
 let player;
 let enemy;
 
-function startGame() {
+function startGame(playerPokemon) {
     scene.clearAll();
-    player = pikachu();
-    enemy = charmander();
+    player = playerPokemon;
+    const enemyPokemons = [pikachu(), charmander()];
+    enemy = enemyPokemons[random(0, enemyPokemons.length)];
 
     scene.attachLeftPokemon(player);
-    player.render();
     scene.attachRightPokemon(enemy);
-    enemy.render();
+    renderPokemons();
 
-    pikachuActions().forEach((action) => {
+    player.playerActions().forEach((action) => {
         scene.attachAction(action, () => playerTurn(action));
         action.render();
     });
@@ -66,7 +65,12 @@ function checkEndGameCondition() {
 
 function newGame() {
     scene.clearAll();
-    scene.showNewGame(startGame);
+    scene.showNewGame(selectPokemon);
+}
+
+function selectPokemon() {
+    scene.clearAll();
+    scene.showPokemonSelect([pikachu(), charmander()], startGame);
 }
 
 export default () => newGame();
