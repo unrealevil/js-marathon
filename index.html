@@ -17,46 +17,14 @@
              alt="Pokemon">
     </header>
     <div class="playground">
-        <div class="pokemon character">
-            <span class="lvl">Lv. 1</span>
-
-            <img src="./assets/pokemons/pikachu.png" class="sprite" alt="pikachu">
-
-            <div class="details">
-                <h2 class="name" id="name-character">
-                    Pikachu
-                </h2>
-                <div class="hp">
-                    <div class="bar">
-                        <div class="health" id="progressbar-character" style="width: 100%;"></div>
-                    </div>
-                    <span class="text" id="health-character">100 / 100</span>
-                </div>
-            </div>
-        </div>
+        <div id="left-character" class="pokemon character"></div>
         <div class="control" id="battle-actions"></div>
-        <div class="pokemon enemy">
-            <span class="lvl">Lv. 1</span>
-
-            <img src="./assets/pokemons/charmander.png" class="sprite" alt="charmander">
-
-            <div class="details">
-                <h2 class="name" id="name-enemy">
-                    Charmander
-                </h2>
-                <div class="hp">
-                    <div class="bar">
-                        <div class="health" id="progressbar-enemy" style="width: 100%;"></div>
-                    </div>
-                    <span class="text" id="health-enemy">100 / 100</span>
-                </div>
-            </div>
-        </div>
+        <div id="right-character" class="pokemon enemy"></div>
     </div>
     <div id="battle-log"></div>
 </div>
 <div class="catch_screen"></div>
 
-<script src="main.js"></script>
+<script src="src/index.js" type="module"></script>
 </body>
 </html>
