@@ -40,6 +40,8 @@ const addLogMessage = (msg) => {
     $logBoard.insertBefore($p, $logBoard.children[0]);
 }
 
+const renderActionLog = action => addLogMessage(action.popLogs().join('<br/>'));
+
 export default {
     clearAll: () => {
         clearActions();
@@ -60,13 +62,12 @@ export default {
                 $btn.disabled = true;
                 $btn.removeEventListener('click', actionCallback);
             }
-
-            addLogMessage(action.popLogs().join('<br/>'));
         }
     },
     attachLeftPokemon: (pokemon) => initCharacterRender($leftCharacter, pokemon),
     attachRightPokemon: (pokemon) => initCharacterRender($rightCharacter, pokemon),
     addLogMessage,
+    renderActionLog,
     showLostGame: (newGameCallback) => {
         clearActions();
         $actionsHolder.appendChild(messageBig('<strong style="color:red">Вы проиграли :((</strong>'));

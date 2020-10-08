@@ -3,10 +3,10 @@ import {random} from "./utils.js";
 export default {
     startGame: (player, enemy) => logDecor`Начинается бой между ${player.name} и ${enemy.name}`,
     doDamage: (damagedPokemon, attackerPokemon) => generateBattlePhrase(damagedPokemon, attackerPokemon),
-    damageInfo: (damageAmount) => `Урон <span style="color:red">-${damageAmount}</span>`,
+    damageInfo: (damageAmount, {name: playerName}, {name: actionName}, {name: enemyName}) => logDecor`${playerName} сделал ${actionName}. У ${enemyName} <span style="color:red">-${damageAmount}</span>`,
     hpInfo: ({name, hp: hpLeft, defaultHp: hpTotal}) => `У ${name} осталось здоровья <span style="color:green">${hpLeft} из ${hpTotal}</span>`,
     doHealing: (pokemon) => generateHealingPhrase(pokemon),
-    healingInfo: (hpAmount) => `Получено здоровья <span style="color:green">+${hpAmount}</span>`,
+    healingInfo: (hpAmount, {name: actionName}, {name: pokemonName}) => logDecor` ${pokemonName} применил ${actionName}. Получено здоровья <span style="color:green">+${hpAmount}</span>`,
     playerLost: ({name: playerName,}, {name: enemyName}) => logDecor`Эхх, ваш ${playerName} погиб смертью храбрых от грязных рук ${enemyName}`,
     playerWin: ({name: playerName,}, {name: enemyName}) => logDecor`Ураа, ваш храбрый ${playerName} победил неудачного ${enemyName}`,
 }
@@ -39,7 +39,21 @@ function generateHealingPhrase({name}) {
 function logDecor(templateData, ...keys) {
     let str = templateData[0];
     keys
-        .map((val) => escape(val))
+        .map(val => escapeHtml(val))
         .forEach((val, index) => str += `<strong>${val}</strong>` + templateData[index + 1]);
     return str;
 }
+
+const escapeHtml = function () {
+    const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': '&quot;',
+        "'": '&#39;',
+        "/": '&#x2F;'
+    };
+
+    return value => (typeof (value) === 'string') ? value.replace(/[&<>"'\/]/g, s => map[s]) : value;
+}();
+
