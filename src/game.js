@@ -1,5 +1,5 @@
 import scene from "./scene.js";
-import {charmander, pikachu} from "./pokemons.js";
+import pokemons from "./pokemons.js";
 import {random} from "./utils.js";
 import log from "./battle-log.js";
 
@@ -9,14 +9,14 @@ let enemy;
 function startGame(playerPokemon) {
     scene.clearAll();
     player = playerPokemon;
-    const enemyPokemons = [pikachu(), charmander()];
+    const enemyPokemons = pokemons().filter(pokemon => pokemon.name !== player.name);
     enemy = enemyPokemons[random(0, enemyPokemons.length)];
 
     scene.attachLeftPokemon(player);
     scene.attachRightPokemon(enemy);
     renderPokemons();
 
-    player.playerActions().forEach((action) => {
+    player.actions.forEach((action) => {
         scene.attachAction(action, () => playerTurn(action));
         action.render();
     });
@@ -32,21 +32,21 @@ function renderPokemons() {
 function playerTurn(action) {
     action.apply(player, enemy);
     action.render();
+    scene.renderActionLog(action);
     renderPokemons();
-    checkEndGameCondition();
-    enemyTurn();
+    if (checkEndGameCondition()) {
+        enemyTurn();
+    }
 }
 
 function enemyTurn() {
-    const damage = random(20, 50);
-    player.makeDamage(damage);
-    scene.addLogMessage([
-            log.doDamage(player, enemy),
-            log.damageInfo(damage),
-            log.hpInfo(player),
-        ].join('<br/>')
-    );
-    renderPokemons();
+    const availableActions = enemy.actions.filter(action => !action.isDisable());
+    if(availableActions) {
+        const action = availableActions[[random(0, availableActions.length)]];
+        action.apply(enemy, player);
+        scene.renderActionLog(action);
+        renderPokemons();
+    }
     checkEndGameCondition();
 }
 
@@ -54,13 +54,15 @@ function checkEndGameCondition() {
     if (player.isDead()) {
         scene.addLogMessage(log.playerLost(player, enemy));
         scene.showLostGame(newGame);
-        return;
+        return false;
     }
 
     if (enemy.isDead()) {
         scene.addLogMessage(log.playerWin(player, enemy));
         scene.showWinGame(newGame);
+        return false;
     }
+    return true;
 }
 
 function newGame() {
@@ -70,7 +72,7 @@ function newGame() {
 
 function selectPokemon() {
     scene.clearAll();
-    scene.showPokemonSelect([pikachu(), charmander()], startGame);
+    scene.showPokemonSelect(pokemons(), startGame);
 }
 
 export default () => newGame();

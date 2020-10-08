@@ -1,11 +1,16 @@
+import {DamageAction, HealthAction} from "./action";
+
 export class Pokemon {
 
-    constructor({name, hp, image, level, playerActions}) {
+    constructor({name, hp, img, attacks, drugs}) {
         this.name = name;
         this.hp = this.defaultHp = hp;
-        this.image = image;
-        this.level = level;
-        this.playerActions = playerActions;
+        this.image = img;
+        this.level = 1;//@todo
+        this.actions = [
+            ...attacks.map(data => new DamageAction(data)),
+            ...drugs.map(data => new HealthAction(data)),
+        ];
     }
 
     isDead() {

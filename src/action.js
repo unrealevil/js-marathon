@@ -6,9 +6,9 @@ class Action {
     actionLog = [];
     btn = buttonDefault;
 
-    constructor({name, amount = null}) {
+    constructor({name, maxCount = null}) {
         this.name = name;
-        this.amount = amount;
+        this.amount = maxCount;
     }
 
     isDisable() {
@@ -43,10 +43,10 @@ class Action {
 
 export class DamageAction extends Action {
 
-    constructor({damageMin, damageMax, ...actionProps}) {
+    constructor({minDamage, maxDamage, ...actionProps}) {
         super(actionProps);
-        this.damageMin = damageMin;
-        this.damageMax = damageMax;
+        this.damageMin = minDamage;
+        this.damageMax = maxDamage;
     }
 
     apply(player, enemy) {
@@ -54,7 +54,7 @@ export class DamageAction extends Action {
             const damage = random(this.damageMin, this.damageMax);
             enemy.makeDamage(damage);
             this.pushLog(log.doDamage(enemy, player));
-            this.pushLog(log.damageInfo(damage));
+            this.pushLog(log.damageInfo(damage, player, this, enemy));
             this.pushLog(log.hpInfo(enemy));
             return true;
         }
@@ -64,10 +64,11 @@ export class DamageAction extends Action {
 
 export class HealthAction extends Action {
     btn = buttonGreen;
-    constructor({hpMin, hpMax, ...actionProps}) {
+
+    constructor({minHp, maxHp, ...actionProps}) {
         super(actionProps);
-        this.hpMin = hpMin;
-        this.hpMax = hpMax;
+        this.hpMin = minHp;
+        this.hpMax = maxHp;
     }
 
     apply(player, enemy) {
@@ -75,7 +76,7 @@ export class HealthAction extends Action {
             const hp = random(this.hpMin, this.hpMax);
             player.addHp(hp);
             this.pushLog(log.doHealing(player));
-            this.pushLog(log.healingInfo(hp));
+            this.pushLog(log.healingInfo(hp, this, player));
             this.pushLog(log.hpInfo(player));
             return true;
         }
