@@ -1,7 +1,7 @@
 import {Pokemon} from "./pokemon.js";
 import API from './api.js'
 
-const defaultPakemonDrugs =  [
+const defaultPakemonDrugs = [
     {
         name: 'Green potion',
         maxHp: 50,
@@ -16,11 +16,10 @@ const defaultPakemonDrugs =  [
     },
 ];
 
-export const loadPokemons = onLoad => {
-    API.fetchAll().then(pokemonsData => onLoad(pokemonsData.map((data) => new Pokemon({ ...data, drugs: defaultPakemonDrugs}))));
+export const loadPokemons = async () => {
+    const pokemonsData = await API.fetchAll();
+    return pokemonsData.map((data) => new Pokemon({...data, drugs: defaultPakemonDrugs}));
 }
 
-export const loadRandomPokemon = onLoad => {
-    API.findRandom().then(data => onLoad(new Pokemon(data)));
-}
+export const loadRandomPokemon = async () => new Pokemon(await API.findRandom());
 
