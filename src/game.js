@@ -55,13 +55,13 @@ function newGame() {
     scene.showNewGame(selectPokemon);
 }
 
-function selectPokemon() {
+async function selectPokemon() {
     scene.clearAll();
-    // callback hell :)
-    loadPokemons(pokemons => scene.showPokemonSelect(pokemons,
-        playerPokemon => loadRandomPokemon(
-            enemyPokemon => startGame(playerPokemon, enemyPokemon)
-        )));
+    const pokemons =  loadPokemons();
+    const enemyPokemon = loadRandomPokemon();
+    scene.showPokemonSelect(await pokemons,
+        async playerPokemon => startGame(playerPokemon, await enemyPokemon)
+    );
 }
 
 export default () => newGame();
