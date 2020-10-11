@@ -2,7 +2,8 @@ import {DamageAction, HealthAction} from "./action";
 
 export class Pokemon {
 
-    constructor({name, hp, img, attacks, drugs}) {
+    constructor({id, name, hp, img, attacks, drugs = []}) {
+        this.id = id;
         this.name = name;
         this.hp = this.defaultHp = hp;
         this.image = img;

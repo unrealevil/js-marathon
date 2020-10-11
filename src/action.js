@@ -1,12 +1,14 @@
 import {random} from './utils.js';
 import log from './battle-log.js';
 import {buttonDefault, buttonGreen} from "./widgets.js";
+import api from './api.js';
 
 class Action {
     actionLog = [];
     btn = buttonDefault;
 
-    constructor({name, maxCount = null}) {
+    constructor({id, name, maxCount = null}) {
+        this.id = id;
         this.name = name;
         this.amount = maxCount;
     }
@@ -16,18 +18,22 @@ class Action {
     }
 
     apply(player, enemy) {
-        if (player.isDead() || enemy.isDead()) {
-            return false;
-        }
+        return new Promise((resolve, reject) => {
+            if (player.isDead() || enemy.isDead()) {
+                return reject();
+            }
 
-        if (null === this.amount) {
-            return true; //бесконечное количество действий
-        }
-        if (!this.isDisable()) {
-            --this.amount;
-            return true;
-        }
-        return false;
+            if (null === this.amount) {
+                return resolve(); //бесконечное количество действий
+            }
+
+            if (!this.isDisable()) {
+                --this.amount;
+                return resolve();
+            }
+
+            return reject();
+        });
     }
 
     pushLog(msg) {
@@ -50,15 +56,23 @@ export class DamageAction extends Action {
     }
 
     apply(player, enemy) {
-        if (super.apply(player, enemy)) {
-            const damage = random(this.damageMin, this.damageMax);
-            enemy.makeDamage(damage);
-            this.pushLog(log.doDamage(enemy, player));
-            this.pushLog(log.damageInfo(damage, player, this, enemy));
-            this.pushLog(log.hpInfo(enemy));
-            return true;
-        }
-        return false;
+        return new Promise((resolve, reject) => {
+            super.apply(player, enemy).then(async () => {
+                    const {kick: {player1: playerDamage, player2: enemyDamage}} = await api.makeDamage(player, this, enemy);
+                    enemy.makeDamage(enemyDamage);
+                    this.pushLog(log.doDamage(enemy, player));
+                    this.pushLog(log.damageInfo(enemyDamage, player, this, enemy));
+                    this.pushLog(log.hpInfo(enemy));
+
+                    player.makeDamage(playerDamage);
+                    this.pushLog(log.doDamage(player, enemy));
+                    this.pushLog(log.damageInfo(playerDamage, enemy, this, player));
+                    this.pushLog(log.hpInfo(player));
+
+                    resolve();
+                }
+            ).catch(reject);
+        });
     }
 }
 
@@ -72,14 +86,16 @@ export class HealthAction extends Action {
     }
 
     apply(player, enemy) {
-        if (super.apply(player, enemy)) {
-            const hp = random(this.hpMin, this.hpMax);
-            player.addHp(hp);
-            this.pushLog(log.doHealing(player));
-            this.pushLog(log.healingInfo(hp, this, player));
-            this.pushLog(log.hpInfo(player));
-            return true;
-        }
-        return false;
+        return new Promise((resolve, reject) => {
+            super.apply(player, enemy).then(() => {
+                    const hp = random(this.hpMin, this.hpMax);
+                    player.addHp(hp);
+                    this.pushLog(log.doHealing(player));
+                    this.pushLog(log.healingInfo(hp, this, player));
+                    this.pushLog(log.hpInfo(player));
+                    resolve();
+                }
+            ).catch(reject);
+        });
     }
 }

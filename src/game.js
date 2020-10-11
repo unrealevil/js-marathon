@@ -1,23 +1,20 @@
 import scene from "./scene.js";
-import pokemons from "./pokemons.js";
-import {random} from "./utils.js";
+import {loadPokemons, loadRandomPokemon} from "./pokemons.js";
 import log from "./battle-log.js";
 
 let player;
 let enemy;
 
-function startGame(playerPokemon) {
+function startGame(playerPokemon, ememyPokemon) {
     scene.clearAll();
     player = playerPokemon;
-    const enemyPokemons = pokemons().filter(pokemon => pokemon.name !== player.name);
-    enemy = enemyPokemons[random(0, enemyPokemons.length)];
-
+    enemy = ememyPokemon;
     scene.attachLeftPokemon(player);
     scene.attachRightPokemon(enemy);
     renderPokemons();
 
     player.actions.forEach((action) => {
-        scene.attachAction(action, () => playerTurn(action));
+        scene.attachAction(action, () => playerAction(action));
         action.render();
     });
 
@@ -29,25 +26,13 @@ function renderPokemons() {
     enemy.render();
 }
 
-function playerTurn(action) {
-    action.apply(player, enemy);
-    action.render();
-    scene.renderActionLog(action);
-    renderPokemons();
-    if (checkEndGameCondition()) {
-        enemyTurn();
-    }
-}
-
-function enemyTurn() {
-    const availableActions = enemy.actions.filter(action => !action.isDisable());
-    if(availableActions) {
-        const action = availableActions[[random(0, availableActions.length)]];
-        action.apply(enemy, player);
+function playerAction(action) {
+    action.apply(player, enemy).finally(() => {
+        action.render();
         scene.renderActionLog(action);
         renderPokemons();
-    }
-    checkEndGameCondition();
+        checkEndGameCondition();
+    });
 }
 
 function checkEndGameCondition() {
@@ -72,7 +57,11 @@ function newGame() {
 
 function selectPokemon() {
     scene.clearAll();
-    scene.showPokemonSelect(pokemons(), startGame);
+    // callback hell :)
+    loadPokemons(pokemons => scene.showPokemonSelect(pokemons,
+        playerPokemon => loadRandomPokemon(
+            enemyPokemon => startGame(playerPokemon, enemyPokemon)
+        )));
 }
 
 export default () => newGame();
