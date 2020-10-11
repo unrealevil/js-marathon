@@ -558,10 +558,9 @@ h1 {
 .pokemon-btn {
     text-align: center;
     position: relative;
-    width: 130px;
-    height: 110px;
-    min-width: 130px;
-    margin: 10px;
+    width: 70px;
+    height: 70px;
+    margin: 5px;
 }
 
 .pokemon-btn .sprite {
@@ -570,15 +569,15 @@ h1 {
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    max-width: 50px;
+    max-width: 30px;
 }
 .pokemon-btn .lvl {
     color: #00b8ff;
     position: absolute;
-    left: 5px;
-    top: 5px;
+    left: 2px;
+    top: 2px;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 10px;
 }
 
 .pokemon-btn .details {
@@ -589,7 +588,7 @@ h1 {
 }
 
 .pokemon-btn .details .name {
-    font-size: 18px;
+    font-size: 11px;
     font-weight: 400;
     color: #222;
     margin: 2px 0;
