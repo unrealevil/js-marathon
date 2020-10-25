@@ -1,9 +1,16 @@
+import pikachuImg from '../assets/pokemons/pikachu.png';
+import charmanderImg from '../assets/pokemons/charmander.png';
+import bulbasaurImg from '../assets/pokemons/bulbasaur.png';
+import squirtleImg from '../assets/pokemons/squirtle.png';
+import pidgeyImg from '../assets/pokemons/pidgey.png';
+import mewImg from '../assets/pokemons/mew.png';
+
 export const pokemonsData = [
     {
         name: 'Pikachu',
         type: 'electric',
         hp: 274,
-        img: './assets/pokemons/pikachu.png',
+        img: pikachuImg,
         attacks: [
             {
                 name: "Тыкнуть  пальцем",
@@ -46,7 +53,7 @@ export const pokemonsData = [
         ]
     },
     {
-        img: './assets/pokemons/charmander.png',
+        img: charmanderImg,
         name: 'Charmander',
         type: 'fire',
         hp: 282,
@@ -92,7 +99,7 @@ export const pokemonsData = [
         ]
     },
     {
-        img: './assets/pokemons/bulbasaur.png',
+        img: bulbasaurImg,
         name: 'Bulbasaur',
         type: 'fire',
         hp: 294,
@@ -138,7 +145,7 @@ export const pokemonsData = [
         ]
     },
     {
-        img: './assets/pokemons/squirtle.png',
+        img: squirtleImg,
         name: 'Squirtle',
         type: 'water',
         hp: 292,
@@ -184,7 +191,7 @@ export const pokemonsData = [
         ]
     },
     {
-        img: './assets/pokemons/pidgey.png',
+        img: pidgeyImg,
         name: 'Pidgey',
         type: 'air',
         hp: 284,
@@ -230,7 +237,7 @@ export const pokemonsData = [
         ]
     },
     {
-        img: './assets/pokemons/mew.png',
+        img: mewImg,
         name: 'Mew',
         type: 'air',
         hp: 404,

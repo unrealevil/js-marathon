@@ -1,6 +1,8 @@
 import {Pokemon} from "./pokemon.js";
 import {pokemonsData} from './pokemons-data';
 
-export default () => {
+const pokemons = () => {
     return pokemonsData.map((data) => new Pokemon(data));
-}
+};
+
+export default pokemons;

@@ -1,10 +1,8 @@
-import {random} from './utils.js';
+import {random} from '../services/utils.js';
 import log from './battle-log.js';
-import {buttonDefault, buttonGreen} from "./widgets.js";
 
 class Action {
     actionLog = [];
-    btn = buttonDefault;
 
     constructor({name, maxCount = null}) {
         this.name = name;
@@ -63,7 +61,7 @@ export class DamageAction extends Action {
 }
 
 export class HealthAction extends Action {
-    btn = buttonGreen;
+    color = 'green';
 
     constructor({minHp, maxHp, ...actionProps}) {
         super(actionProps);
