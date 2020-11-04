@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import s from './GamePage.module.css';
+import s from './index.module.css';
 import HeaderBlock from "../../components/HeaderBlock";
 import PokemonBlock from "../../components/PokemonBlock";
 import Actions from "../../components/ActionsBlock";
