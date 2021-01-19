@@ -1,5 +1,5 @@
 import React from 'react';
-import s from './WelcomePage.module.css';
+import s from './index.module.css';
 import logo from './logo.svg';
 import HeaderBlock from "../../components/HeaderBlock";
 import Button from "../../components/Button";
