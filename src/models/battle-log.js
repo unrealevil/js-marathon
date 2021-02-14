@@ -1,6 +1,6 @@
-import {random} from "./utils.js";
+import {random} from "../services/utils.js";
 
-export default {
+const battleLog = {
     startGame: (player, enemy) => logDecor`Начинается бой между ${player.name} и ${enemy.name}`,
     doDamage: (damagedPokemon, attackerPokemon) => generateBattlePhrase(damagedPokemon, attackerPokemon),
     damageInfo: (damageAmount, {name: playerName}, {name: actionName}, {name: enemyName}) => logDecor`${playerName} сделал ${actionName}. У ${enemyName} <span style="color:red">-${damageAmount}</span>`,
@@ -10,6 +10,8 @@ export default {
     playerLost: ({name: playerName,}, {name: enemyName}) => logDecor`Эхх, ваш ${playerName} погиб смертью храбрых от грязных рук ${enemyName}`,
     playerWin: ({name: playerName,}, {name: enemyName}) => logDecor`Ураа, ваш храбрый ${playerName} победил неудачного ${enemyName}`,
 }
+
+export default battleLog;
 
 function generateBattlePhrase({name: first}, {name: second}) {
     const phrases = [
@@ -54,6 +56,6 @@ const escapeHtml = function () {
         "/": '&#x2F;'
     };
 
-    return value => (typeof (value) === 'string') ? value.replace(/[&<>"'\/]/g, s => map[s]) : value;
+    return value => (typeof (value) === 'string') ? value.replace(/[&<>"'/]/g, s => map[s]) : value;
 }();
 
